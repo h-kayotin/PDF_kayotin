@@ -19,8 +19,13 @@ def turn_pdf():
     :return: 无返回值
     """
     # 指定文件名
-    print("请将pdf文件放在resources文件夹下-->\n")
-    filename = str(input("请输入文件名,不包括文件类型："))
+    print("请将要翻转的pdf文件放在一个文件夹下-->\n")
+    while True:
+        source_src = Path(input("请输入要翻转的文件夹完整路径："))
+        if source_src.exists():
+            break
+        else:
+            print("您输入的路径有误，请重新输入--->\n")
 
     # 指定翻转的角度，顺时针
     print("""
@@ -28,18 +33,22 @@ def turn_pdf():
     例如：90 表示顺时针旋转90度--->
     """)
     point = int(input("请输入："))
-    try:
-        reader = PyPDF2.PdfReader(f"resources/{filename}.pdf")
-        writer = PyPDF2.PdfWriter()
-        for page_num in range(len(reader.pages)):
-            current_page = reader.pages[page_num]
-            current_page.rotate(point)
-            writer.add_page(current_page)
-        with open(f"output/{filename}_fixed.pdf", "wb") as file:
-            writer.write(file)
-    except FileNotFoundError:
-        print("读取文件失败\n请确认文件是否存在，或文件名是否正确--->")
-        return False
+
+    files = source_src.glob("*.pdf")
+    for file in files:
+        try:
+            reader = PyPDF2.PdfReader(file)
+            writer = PyPDF2.PdfWriter()
+            for page_num in range(len(reader.pages)):
+                current_page = reader.pages[page_num]
+                current_page.rotate(point)
+                writer.add_page(current_page)
+            with open(f"output/fixed_{file.name}", "wb") as fixed_file:
+                writer.write(fixed_file)
+                print(f"已旋转{file.name},保存在output文件夹中")
+        except FileNotFoundError:
+            print("读取文件失败\n请确认文件是否存在，或文件名是否正确--->")
+            return False
 
 
 def encrypt_pdf():
