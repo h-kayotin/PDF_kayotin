@@ -43,6 +43,10 @@ def turn_pdf():
 
 
 def encrypt_pdf():
+    """
+    对指定文件夹的所有PDF加密
+    :return:无返回值
+    """
     print("请将要加密的文件夹放在resources文件夹下--->\n")
     encrypt_pwd = random_pwd()
     src_folder = Path("resources/")
