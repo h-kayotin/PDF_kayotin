@@ -7,8 +7,8 @@ Update：2023/4/5
 """
 
 import PyPDF2
-from PyPDF2 import PaperSize
-from PyPDF2 import PageObject
+# from PyPDF2 import PaperSize
+# from PyPDF2 import PageObject
 import kayotin_tools
 from pathlib import Path
 
@@ -107,10 +107,3 @@ if __name__ == '__main__':
     """)
     op_num = str(input("请输入："))
     choose_type[op_num]()
-
-
-
-
-
-
-
