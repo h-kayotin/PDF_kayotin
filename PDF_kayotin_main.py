@@ -51,6 +51,7 @@ def turn_pdf():
         except FileNotFoundError:
             print("读取文件失败\n请确认文件是否存在，或文件名是否正确--->")
             return False
+    input("请摁回车键退出，或直接关闭程序--->")
 
 
 def encrypt_pdf():
@@ -91,7 +92,8 @@ def mark_pdf():
 
         with open(f"output/已加水印_{pdf_file.name}", "wb") as file:
             writer.write(file)
-        print(f"成功对{pdf_file.name}加了水印，保存在output中")
+        print(f"成功对{pdf_file.name}加了水印，保存在output中\n")
+        input("请摁回车键退出，或直接关闭程序--->")
 
 
 def join_pdf():
