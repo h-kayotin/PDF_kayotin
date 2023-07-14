@@ -114,12 +114,17 @@ def dir_check():
             Path.mkdir(dir_path)
 
 
+def cut_file():
+    pass
+
+
 random_pwd = kayotin_tools.kayotin.random_password
 choose_type = {
     "1": turn_pdf,
     "2": encrypt_pdf,
     "3": mark_pdf,
-    "4": join_pdf
+    "4": join_pdf,
+    "5": cut_file
 }
 
 
@@ -130,7 +135,8 @@ if __name__ == '__main__':
     1：翻转PDF文件\n
     2：对PDF文件加密\n
     3：加水印\n
-    4：合并PDF文件
+    4：合并PDF文件\n
+    5: PDF分页
     """)
     op_num = str(input("请输入："))
     choose_type[op_num]()
