@@ -10,14 +10,18 @@ import PyPDF2
 import kayotin_tools
 from pathlib import Path
 
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
+
 
 def get_files():
-    while True:
-        source_src = Path(input("请输入源文件夹完整路径："))
-        if source_src.exists():
-            break
-        else:
-            print("您输入的路径有误，请重新输入--->\n")
+    # 创建并隐藏TK窗口
+    root = Tk()
+    root.withdraw()
+    root.attributes('-topmost', True)
+    folder = askdirectory(title="请选择PDF文件所在的文件夹")
+    print("所选路径是：", folder)
+    source_src = Path(folder)
     files = source_src.glob("*.pdf")
     return files
 
@@ -51,7 +55,6 @@ def turn_pdf():
         except FileNotFoundError:
             print("读取文件失败\n请确认文件是否存在，或文件名是否正确--->")
             return False
-    input("请摁回车键退出，或直接关闭程序--->")
 
 
 def encrypt_pdf():
@@ -61,7 +64,8 @@ def encrypt_pdf():
     """
     print("请将要加密的文件夹放在一个文件夹下--->\n")
     encrypt_pwd = random_pwd()
-
+    with open("encrypted/password.txt", mode="a", encoding="utf-8") as txt_file:
+        txt_file.write(encrypt_pwd)
     files = get_files()
     for pdf_file in files:
         pdf_reader = PyPDF2.PdfReader(pdf_file)
@@ -72,7 +76,7 @@ def encrypt_pdf():
         with open(f"encrypted/已加密_{pdf_file.name}", "wb") as file:
             pdf_writer.write(file)
             print(f"{pdf_file.name}已加密,密码是：{encrypt_pwd}\n")
-    input("已加密的PDF文件放在encrypted文件夹下，请妥善保存密码。\n摁回车键退出--->")
+    input("已加密的PDF文件放在encrypted文件夹下，密码在password.txt中。请妥善保存密码。\n摁回车键继续--->")
 
 
 def mark_pdf():
@@ -97,6 +101,7 @@ def mark_pdf():
 
 
 def join_pdf():
+    print("将对所选文件夹的所有pdf文件进行合并\n")
     file_join = PyPDF2.PdfMerger()
     files = get_files()
     for file in files:
@@ -115,7 +120,46 @@ def dir_check():
 
 
 def cut_file():
-    pass
+    # 指定文件名
+    print("请将要分页的pdf文件放在一个文件夹下-->\n")
+    files = get_files()
+    for file in files:
+        folder = Path.joinpath(file.parent, file.stem)
+        if not Path.exists(folder):
+            Path.mkdir(folder)
+        reader = PyPDF2.PdfReader(file)
+        for page_num in range(len(reader.pages)):
+            writer = PyPDF2.PdfWriter()
+            current_page = reader.pages[page_num]
+            writer.add_page(current_page)
+            with open(f"{folder}/{page_num}.pdf", "wb") as dep_file:
+                writer.write(dep_file)
+    print("分页已完成，保存在所选文件夹的对应名称文件夹下。")
+
+
+def is_quit():
+    print("感谢使用\n")
+    return True
+
+
+def main_page():
+    dir_check()
+    print("""
+    请选择您要进行哪种操作,退出请输入0或直接关闭程序：\n
+    1：翻转PDF文件\n
+    2：对PDF文件加密\n
+    3：加水印\n
+    4：合并PDF文件\n
+    5: 拆分PDF文件\n
+    0：退出
+    """)
+    op_num = str(input("请输入："))
+    choose_type[op_num]()
+    is_continue = int(input("请输入1回到主界面，输入0退出或直接关闭程序：\n"))
+    if is_continue:
+        main_page()
+    else:
+        print("谢谢使用")
 
 
 random_pwd = kayotin_tools.kayotin.random_password
@@ -124,19 +168,10 @@ choose_type = {
     "2": encrypt_pdf,
     "3": mark_pdf,
     "4": join_pdf,
-    "5": cut_file
+    "5": cut_file,
+    "0": is_quit
 }
 
 
 if __name__ == '__main__':
-    dir_check()
-    print("""
-    请选择您要进行哪种操作：\n
-    1：翻转PDF文件\n
-    2：对PDF文件加密\n
-    3：加水印\n
-    4：合并PDF文件\n
-    5: PDF分页
-    """)
-    op_num = str(input("请输入："))
-    choose_type[op_num]()
+    main_page()
