@@ -154,12 +154,12 @@ def main_page():
     0：退出
     """)
     op_num = str(input("请输入："))
-    choose_type[op_num]()
-    is_continue = int(input("请输入1回到主界面，输入0退出或直接关闭程序：\n"))
-    if is_continue:
-        main_page()
+    if choose_type[op_num]():
+        pass
     else:
-        print("谢谢使用")
+        not_done = int(input("\n请输入1回到主界面，输入0退出:"))
+        if not_done:
+            main_page()
 
 
 random_pwd = kayotin_tools.kayotin.random_password
