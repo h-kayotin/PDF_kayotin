@@ -9,15 +9,20 @@
 
 但是还是试着用python做一个多合一的工具
 
-目前有以下功能，运行主程序即可
+目前有以下功能，运行主程序即可， 
 
-    1：翻转PDF文件\n
-    2：对PDF文件加密\n
-    3：加水印\n
+注意选择的是文件夹，会对该文件夹所有pdf文件执行操作。
+
+    1：翻转PDF文件
+    2：对PDF文件加密
+    3：加水印
     4：合并PDF文件
+    5：PDF文件分页
 
 需要以下依赖库
 ```python
 pip install PyPDF2
 pip install pathlib
 ````
+
+可以直接下载Releases版本运行
