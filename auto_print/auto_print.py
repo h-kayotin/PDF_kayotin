@@ -15,6 +15,7 @@ import time
 class PrintPDF:
     def __init__(self, desc=False):
         self.files = get_files()
+        self.counts = 0
         self.print_name = win32print.GetDefaultPrinter()
         self.handle = win32print.OpenPrinter(self.print_name)
         if self.print_name == "":
@@ -22,7 +23,7 @@ class PrintPDF:
             return
 
         self.sort_file_by_time(desc)
-        print(f"打印完毕，本次共打印{len(self.files)}个文件")
+        print(f"打印完毕，本次共打印{self.counts}个文件")
 
     def sort_file_by_time(self, desc):
         file_dict = dict()
@@ -32,6 +33,7 @@ class PrintPDF:
         print("开始打印------")
         for r in res:
             print("正在打印：", r)
+            self.counts += 1
             self.print_file(r)
 
     def print_file(self, file):
